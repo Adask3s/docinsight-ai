@@ -1,0 +1,24 @@
+# --- KLUCZE I SEKRETY (NAJWAŻNIEJSZE) ---
+.env
+.env.local
+*.pem
+
+# --- Python (parser-service) ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+parser-service/.venv/
+
+# --- Node / React (frontend) ---
+node_modules/
+dist/
+build/
+.DS_Store
+
+# --- .NET (backend) ---
+bin/
+obj/
+.vs/
+*.user
+appsettings.Development.json

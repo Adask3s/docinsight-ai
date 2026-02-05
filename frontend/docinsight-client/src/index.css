@@ -1,0 +1,99 @@
+/* Global design tokens and base styles (Tailwind removed). */
+
+:root {
+  /* macOS Inspired Colors */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1a1f36;
+  --bg-tertiary: #252d45;
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --accent-blue: #0084ff;
+  --accent-purple: #5e5ce6;
+  --accent-green: #34c759;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.35);
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+    sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Minimal global element rules. Avoid broad element rules that clash with Tailwind utility classes. */
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+  color: var(--accent-blue);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-purple);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* Avoid styling the raw `button` element globally — scope to a class if you need a default style. */
+.btn-default {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--accent-blue);
+  color: white;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-default:hover {
+  background-color: var(--accent-purple);
+  box-shadow: var(--shadow-md);
+}
+.btn-default:focus,
+.btn-default:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f7;
+    --bg-tertiary: #ececf1;
+    --text-primary: #1d1d1d;
+    --text-secondary: #6f6f77;
+  }
+}
+
+/* reset minimalny */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* preferowane box-sizing jest już w utils, ale nie zaszkodzi */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

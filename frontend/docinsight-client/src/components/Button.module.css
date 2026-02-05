@@ -1,0 +1,82 @@
+/* Base button */
+.base {
+  padding: 0.55rem 1.2rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 160ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  backdrop-filter: blur(8px);
+}
+
+/* Hover – bardzo subtelny, elegancki efekt */
+.base:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* PRIMARY – elegancki, nowoczesny, minimalistyczny gradient */
+.primary {
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  color: #fff;
+  border: none;
+}
+.primary:hover {
+  background: linear-gradient(180deg, #528df7, #2d6bf0);
+}
+.primary:active {
+  transform: translateY(1px);
+}
+
+/* SECONDARY – stonowany, czysty styl */
+.secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* LOGOUT – delikatny czerwony Apple-style */
+.logout {
+  background: linear-gradient(180deg, #ef4444, #dc2626);
+  color: #fff;
+  border: none;
+}
+.logout:hover {
+  background: linear-gradient(180deg, #f35b5b, #e63a3a);
+}
+
+/* TABS */
+.tab {
+  padding: 0.55rem 1rem;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  border: none;
+}
+.tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ACTIVE TAB */
+.tabActive {
+  padding: 0.55rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Utilities */
+.fullWidth {
+  width: 100%;
+}
