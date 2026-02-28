@@ -10,9 +10,17 @@ function AuthPanel({ onAuth }) {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
 
+  // funkcja do zmiany trybu (login/register) i resetowania pól formularza oraz statusu
+  const handleModeChange = (newMode) => {
+    setMode(newMode); // Zmień tryb (login/register)
+    setEmail(""); // Wyczyść email
+    setPassword(""); // Wyczyść hasło
+    setStatus(""); // Wyczyść stare komunikaty błędów
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus(mode === "login" ? "Logowanie..." : "Rejestracja...");
+    setStatus(mode === "login" ? "Logging in..." : "Registering...");
     const url =
       mode === "login"
         ? "http://localhost:5191/auth/login"
@@ -24,32 +32,57 @@ function AuthPanel({ onAuth }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await response.json();
 
+      // 1. Sprawdzamy typ odpowiedzi (JSON czy HTML/Text?)
+      const contentType = response.headers.get("content-type");
+      let data;
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(`Server error (not JSON): ${text.slice(0, 50)}...`);
+      }
+
+      // 2. Obsługa błędów (np. 400 Bad Request)
       if (!response.ok) {
-        setStatus(
-          typeof data === "string"
-            ? data
-            : Array.isArray(data)
-            ? data.map((e) => e.description).join(", ")
-            : data.message || "❌ Błąd"
-        );
+        let errorMsg = "Error";
+
+        if (typeof data === "string") {
+          errorMsg = "Error: " + data;
+        } else if (data.message) {
+          // Jeśli message jest tablicą (błędy Identity)
+          if (Array.isArray(data.message)) {
+            errorMsg =
+              "Validation error:\n" +
+              data.message.map((e) => "- " + e.description).join("\n");
+          } else {
+            errorMsg = "Error: " + data.message;
+          }
+        } else if (Array.isArray(data)) {
+          errorMsg =
+            "Validation error:\n" +
+            data.map((e) => "- " + e.description).join("\n");
+        }
+
+        setStatus(errorMsg);
         return;
       }
 
+      // 3. Sukces
       if (mode === "register") {
-        setStatus("Zarejestrowano! Możesz się zalogować.");
+        setStatus("You are registered! You can now log in.");
         setMode("login");
         return;
       }
 
       localStorage.setItem("jwt_token", data.token);
-      setStatus("Zalogowano!");
+      setStatus("Logged in!");
       setEmail("");
       setPassword("");
       if (onAuth) onAuth();
     } catch (err) {
-      setStatus("❌ Błąd: " + err.message);
+      console.error(err);
+      setStatus("Error: " + err.message);
     }
   };
 
@@ -70,7 +103,7 @@ function AuthPanel({ onAuth }) {
           <div className={styles.cardInner}>
             <div className={styles.header}>
               <h1 className={styles.title}>Doc Insight</h1>
-              <p className={styles.subtitle}>AI-Powered Document Analysis</p>
+              <p className={styles.subtitle}>Analiza dokumentów z pomocą AI</p>
             </div>
 
             {isLoggedIn ? (
@@ -86,7 +119,8 @@ function AuthPanel({ onAuth }) {
                       marginTop: "0.25rem",
                     }}
                   >
-                    Jesteś gotowy do analizy dokumentów
+                    Teraz masz dostęp do wszystkich funkcji analizy dokumentów.
+                    Kliknij "Wyloguj", aby zakończyć sesję.
                   </p>
                 </div>
 
@@ -95,7 +129,7 @@ function AuthPanel({ onAuth }) {
                   onClick={handleLogout}
                   className={utils.fullWidth}
                 >
-                  Wyloguj się
+                  Wyloguj
                 </Button>
               </div>
             ) : (
@@ -103,17 +137,19 @@ function AuthPanel({ onAuth }) {
                 <div className={styles.tabs}>
                   <Button
                     variant={mode === "login" ? "tab-active" : "tab"}
-                    onClick={() => setMode("login")}
+                    onClick={() => handleModeChange("login")} // używamy funkcji do zmiany trybu
                     className={styles.tabBtn}
+                    rounded
                   >
-                    Zaloguj
+                    Zaloguj się
                   </Button>
                   <Button
                     variant={mode === "register" ? "tab-active" : "tab"}
-                    onClick={() => setMode("register")}
+                    onClick={() => handleModeChange("register")} // używamy funkcji do zmiany trybu
                     className={styles.tabBtn}
+                    rounded
                   >
-                    Zarejestruj
+                    Zarejestruj się
                   </Button>
                 </div>
 
@@ -122,7 +158,7 @@ function AuthPanel({ onAuth }) {
                     <label className={styles.label}>Email</label>
                     <FormInput
                       type="email"
-                      placeholder="twoj@email.com"
+                      placeholder="twój@email.pl"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -153,12 +189,14 @@ function AuthPanel({ onAuth }) {
                   <div
                     className={styles.statusBox}
                     style={{
-                      background: status.includes("❌")
+                      background: status.includes("Error")
                         ? "rgba(255,0,0,0.04)"
                         : "rgba(52,199,89,0.04)",
-                      color: status.includes("❌")
+                      color: status.includes("Error")
                         ? "#ffb3b3"
                         : "var(--accent-green)",
+                      whiteSpace: "pre-wrap", // Respektuje znaki \n
+                      textAlign: "left", // Wyrównuje listę do lewej
                     }}
                   >
                     {status}
@@ -168,8 +206,8 @@ function AuthPanel({ onAuth }) {
                 <div className={styles.footer}>
                   <p className={styles.subtitle}>
                     {mode === "login"
-                      ? 'Nie masz konta? Kliknij "Zarejestruj"'
-                      : "Masz już konto? Kliknij Zaloguj"}
+                      ? 'Nie masz konta? Kliknij "Zarejestruj się"'
+                      : 'Masz już konto? Kliknij "Zaloguj się"'}
                   </p>
                 </div>
               </>
@@ -177,7 +215,7 @@ function AuthPanel({ onAuth }) {
           </div>
         </div>
 
-        <p className={styles.centerText}>Analiza dokumentów z AI</p>
+        <p className={styles.centerText}>Documents analysis with AI</p>
       </div>
     </div>
   );

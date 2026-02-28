@@ -1,47 +1,129 @@
 import { useState, useEffect } from "react";
+import DocumentsList from "./DocumentsList"; // <--- Importujemy komponent
 import styles from "./Dashboard.module.css";
 import utils from "../styles/utils.module.css";
+import Button from "./Button"; // Nasz komponent!
+import { FaCirclePlus } from "react-icons/fa6"; // Twoja ikona!
 
-function Dashboard({ onLogout, goToAnalysis }) {
+function Dashboard({ onLogout, goToAnalysis, onLoadDocument }) {
   const [documents, setDocuments] = useState([]);
-  const [stats, setStats] = useState({ total: 0, saved: 0 });
+  const [stats, setStats] = useState({ saved: 0, latestDate: "-" });
   const [userEmail, setUserEmail] = useState("");
+  const [error, setError] = useState("");
+  const DOCUMENT_GOAL = 10; // used to normalize "All Documents" progress (adjustable)
 
+  // 1. Logika pobierania (Fetch)
   useEffect(() => {
     const token = localStorage.getItem("jwt_token");
     if (!token) return;
 
-    setUserEmail("user@example.com");
+    try {
+      // Bierzemy środkową część tokena (payload) i ją odkodowujemy
+      const payloadBase64 = token.split(".")[1];
+      // atob dekoduje base64. encode/decodeURIComponent rozwiązuje problem polskich znaków
+      const jsonPayload = decodeURIComponent(
+        atob(payloadBase64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join(""),
+      );
+
+      const decodedToken = JSON.parse(jsonPayload);
+      // DEBUG: Wypisujemy zdekodowany token, żeby zobaczyć, jakie mamy klucze do dyspozycji
+      // console.log("Zdekodowany JWT:", decodedToken);
+
+      // W systemach .NET adres e-mail często kryje się pod tym długim kluczem lub pod zwykłym "email" / "sub"
+      const email =
+        decodedToken.email ||
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+        ] ||
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        ] ||
+        "User";
+
+      setUserEmail(email);
+    } catch (e) {
+      console.error("Błąd dekodowania tokena", e);
+      setUserEmail("User"); // Fallback w razie błędu
+    }
 
     const fetchDocuments = async () => {
       try {
         const response = await fetch("http://localhost:5191/documents", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        if (!response.ok) throw new Error("Błąd pobierania dokumentów");
-        const data = await response.json();
-        setDocuments(data);
-        setStats({
-          total: data.length, // Liczba dokumentów w historii
-          saved: data.length, // Wszystkie pobrane z /documents są zapisane
-        });
+        if (!response.ok) throw new Error("Error fetching documents");
 
-        setTimeout(() => {
-          document
-            .querySelectorAll(`.${styles.progressFill}`)
-            .forEach((el, i) => {
-              if (i === 0) el.style.width = `${data.length}%`;
-              if (i === 1)
-                el.style.width = `${data.filter((d) => d.saved).length}%`;
-            });
-        }, 200);
+        const data = await response.json();
+        console.log("GET /documents response:", JSON.stringify(data, null, 2));
+        setDocuments(data);
+
+        // Aktualizacja statystyk
+
+        // Skoro endpoint zwraca tylko zapisane analizy, to length jest naszym savedCount
+        const savedCount = data.length;
+        const latestDate =
+          savedCount > 0
+            ? new Date(data[0].uploadedAt).toLocaleDateString()
+            : "No documents yet";
+
+        setStats({
+          saved: savedCount,
+          latestDate: latestDate,
+        });
       } catch (err) {
         console.error(err);
+        setError("Failed to load documents. Please try again later.");
       }
     };
 
     fetchDocuments();
   }, []);
+
+  // 2. Logika usuwania (Delete) - PRZENIESIONA TUTAJ
+  const handleDeleteDocument = async (id) => {
+    const token = localStorage.getItem("jwt_token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`http://localhost:5191/documents/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        alert(errData.message || "Error deleting document");
+        return;
+      }
+
+      // Aktualizacja stanu po usunięciu
+      setDocuments((prevDocs) => {
+        const newDocs = prevDocs.filter((doc) => doc.id !== id);
+        const newSaved = newDocs.length;
+        const newLatestDate =
+          newSaved > 0
+            ? new Date(newDocs[0].uploadedAt).toLocaleDateString()
+            : "Brak dokumentów";
+
+        setStats({ saved: newSaved, latestDate: newLatestDate });
+        return newDocs;
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to connect to the server.");
+    }
+  };
+
+  // MENTORING: Tutaj liczymy procent dla paska, czysta matematyka wewnątrz renderu.
+  const pctSaved =
+    DOCUMENT_GOAL === 0
+      ? 100
+      : Math.min(100, Math.round((stats.saved / DOCUMENT_GOAL) * 100));
 
   return (
     <div className={utils.bgMain}>
@@ -51,60 +133,69 @@ function Dashboard({ onLogout, goToAnalysis }) {
       <header className={styles.header}>
         <div>
           <div className={styles.title}>DocInsight AI</div>
-          <div className={styles.userInfo}>Zalogowany jako: {userEmail}</div>
+          {/* Elegancka pigułka użytkownika */}
+          <div className={styles.userInfoBadge}>
+            <div className={styles.userAvatar}>
+              {userEmail.charAt(0).toUpperCase()}
+            </div>
+            <span className={styles.userText}>
+              Zalogowano jako: <strong>{userEmail}</strong>
+            </span>
+          </div>
         </div>
-        <button className={styles.button} onClick={onLogout}>
+        <Button variant="logout" onClick={onLogout}>
           Wyloguj
-        </button>
+        </Button>
       </header>
 
       <section className={styles.statsContainer}>
+        {/* KARTA 2: Ostatnia aktywność (sama data, bez paska) */}
         <div className={styles.card}>
-          <h3>Wszystkie dokumenty</h3>
-          <p>{stats.total}</p>
-          <div className={styles.progressBar}>
-            <div className={styles.progressFill}></div>
-          </div>
+          <h3>Ostatnia Analiza</h3>
+          <p
+            style={{
+              fontSize: stats.saved > 0 ? "1.5rem" : "1.2rem",
+              marginTop: "10px",
+            }}
+          >
+            {stats.latestDate}
+          </p>
         </div>
+        {/* KARTA 2: Zapisane analizy (z dynamicznym paskiem postępu) */}
         <div className={styles.card}>
-          <h3>Zapisane analizy</h3>
+          <h3>Zapisane Analizy</h3>
           <p>{stats.saved}</p>
           <div className={styles.progressBar}>
-            <div className={styles.progressFill}></div>
+            {/* 👇 TO JEST REACT WAY: Bezpośrednie bindowanie zmiennej do atrybutu style */}
+            <div
+              className={styles.progressFill}
+              style={{ width: `${pctSaved}%` }}
+            ></div>
           </div>
         </div>
       </section>
 
       <div style={{ marginBottom: "2rem", textAlign: "center" }}>
-        <button className={styles.button} onClick={goToAnalysis}>
-          Analizuj Dokument
-        </button>
+        <Button
+          variant="primary"
+          onClick={goToAnalysis}
+          style={{ padding: "0.8rem 2rem", fontSize: "1.1rem" }} // Powiększamy go lekko
+        >
+          <FaCirclePlus size={24} color="#00bfff" />
+          Nowa Analiza
+        </Button>
       </div>
 
       <section className={styles.documentsSection}>
-        <h2>Historia dokumentów</h2>
-        {documents.length === 0 ? (
-          <p>Brak zapisanych dokumentów.</p>
-        ) : (
-          <table className={styles.documentsTable}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Plik</th>
-                <th>Data</th>
-              </tr>
-            </thead>
-            <tbody>
-              {documents.map((doc) => (
-                <tr key={doc.id}>
-                  <td>{doc.id}</td>
-                  <td>{doc.fileName}</td>
-                  <td>{new Date(doc.uploadedAt).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <h2 className={styles.sectionTitle}>Historia dokumentów</h2>
+        {error && <p style={{ color: "#ff8080" }}>{error}</p>}
+
+        {/* UŻYWAMY KOMPONENTU - CZYSTO I ZGODNIE Z DRY */}
+        <DocumentsList
+          documents={documents}
+          onSelectDocument={onLoadDocument} // Funkcja z App.jsx
+          onDeleteDocument={handleDeleteDocument} // Funkcja lokalna z Dashboardu
+        />
       </section>
     </div>
   );

@@ -5,7 +5,9 @@
   background: var(--bg-secondary);
   color: var(--text-primary);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: box-shadow 200ms, border-color 200ms;
+  transition:
+    box-shadow 200ms,
+    border-color 200ms;
 }
 .input:focus {
   outline: none;

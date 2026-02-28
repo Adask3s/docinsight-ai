@@ -1,79 +1,100 @@
-/* Base button */
+/* src/components/Button.module.css */
+
 .base {
-  padding: 0.55rem 1.2rem;
-  font-weight: 500;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 160ms ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 10px; /* Odstęp między ikoną a tekstem */
+  padding: 0.6rem 1.5rem;
+  border-radius: 999px; /* Kształt pigułki (Pill) */
+  font-weight: 600;
   font-size: 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-primary);
-  backdrop-filter: blur(8px);
+  cursor: pointer;
+  backdrop-filter: blur(8px); /* Efekt szkła */
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
 }
 
-/* Hover – bardzo subtelny, elegancki efekt */
+/* Podnoszenie się przycisku zostawiamy, tak jak chciałeś! */
 .base:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
 }
 
-/* PRIMARY – elegancki, nowoczesny, minimalistyczny gradient */
+/* PRIMARY – Szklany granat/błękit (jak pigułka użytkownika) */
 .primary {
-  background: linear-gradient(180deg, #3b82f6, #2563eb);
-  color: #fff;
-  border: none;
+  background: rgba(0, 87, 184, 0.15);
+  border: 1px solid rgba(0, 119, 182, 0.3);
+  color: #e0f2fe; /* Lodowy błękit */
+  box-shadow: 0 4px 12px rgba(0, 20, 40, 0.2);
 }
+
 .primary:hover {
-  background: linear-gradient(180deg, #528df7, #2d6bf0);
+  background: rgba(0, 87, 184, 0.3);
+  border-color: rgba(0, 119, 182, 0.5);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 87, 184, 0.35);
 }
+
 .primary:active {
   transform: translateY(1px);
 }
 
-/* SECONDARY – stonowany, czysty styl */
+/* SECONDARY – Bardziej stonowany (np. dla anuluj / pobocznych akcji) */
 .secondary {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #bae6fd;
 }
+
 .secondary:hover {
   background: rgba(255, 255, 255, 0.1);
-}
-
-/* LOGOUT – delikatny czerwony Apple-style */
-.logout {
-  background: linear-gradient(180deg, #ef4444, #dc2626);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #fff;
-  border: none;
-}
-.logout:hover {
-  background: linear-gradient(180deg, #f35b5b, #e63a3a);
 }
 
-/* TABS */
+/* LOGOUT – Szklana czerwień */
+.logout {
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  box-shadow: 0 4px 12px rgba(60, 10, 10, 0.2);
+}
+
+.logout:hover {
+  background: rgba(220, 38, 38, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+}
+
+/* TABS (Zakładki - jeśli ich gdzieś używasz) */
 .tab {
   padding: 0.55rem 1rem;
   background: transparent;
-  color: var(--text-secondary);
-  border-radius: 6px;
+  border-radius: 999px;
   border: none;
+  color: #bae6fd;
 }
+
 .tab:hover {
-  color: var(--text-primary);
+  color: #fff;
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* ACTIVE TAB */
 .tabActive {
   padding: 0.55rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: var(--text-primary);
+  background: rgba(0, 119, 182, 0.2);
+  border-radius: 999px;
+  color: #fff;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(0, 119, 182, 0.4);
 }
 
 /* Utilities */

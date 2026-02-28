@@ -1,0 +1,98 @@
+/* src/components/DocumentsList.module.css */
+
+.listContainer {
+  margin-top: 2rem;
+  width: 100%;
+  overflow-x: auto; /* Zabezpieczenie na małe ekrany */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(24, 24, 24, 0.85); /* Twój kolor z dashboardu */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  text-align: left;
+  color: #f1f1f1;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Delikatne linie */
+  transition: background 0.8s ease;
+}
+
+.table th {
+  background: rgba(0, 87, 184, 0.7); /* Twój niebieski nagłówek */
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+/* Efekt "zebry" i hover na wierszach */
+.table tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.table tr:hover td {
+  background: rgba(0, 87, 184, 0.15);
+}
+
+/* nowa klasa dla nagłówka "Akcja" */
+.actionsHeader {
+  width: 1%; /* trik: przeglądarka skurczy kolumnę do minimum */
+  white-space: nowrap; /* Zabrania przenoszenia tekstu do nowej linii */
+  text-align: center !important; /* centrujemy napis "Akcja" i w .actionsWrapper centrujemy przyciski zeby bylo ladnie nad sobą*/
+}
+
+/* Przyciski akcji */
+.actionsCell {
+  white-space: nowrap; /* Zabrania łamania przycisków */
+  width: 1%; /* Potwierdzamy, że komórka ma być minimalnej szerokości */
+}
+
+/* To ten div w środku komórki będzie układał przyciski */
+.actionsWrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center; /* centrujemy przyciski pod napisem */
+}
+
+.iconButton {
+  background: none;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.viewBtn {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.viewBtn:hover {
+  background: rgba(0, 191, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.deleteBtn {
+  border-color: #ff8080;
+  color: #ff8080;
+}
+
+.deleteBtn:hover {
+  background: rgba(255, 128, 128, 0.1);
+  transform: translateY(-2px);
+}

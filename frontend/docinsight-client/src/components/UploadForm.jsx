@@ -1,4 +1,11 @@
 import { useState } from "react";
+import Button from "./Button"; // Używamy Twojego gotowego przycisku!
+import styles from "./UploadForm.module.css"; // Importujemy nowe style
+import styles2 from "./AnalysisReport.module.css";
+import { RiMailSendLine } from "react-icons/ri";
+import { FaRegFilePdf } from "react-icons/fa";
+import { RiFileAddLine } from "react-icons/ri";
+import { RiFile3Line } from "react-icons/ri";
 
 function UploadForm({
   setParsedText,
@@ -35,7 +42,7 @@ function UploadForm({
       if (!response.ok) throw new Error("Błąd podczas wysyłania");
       const resultJson = await response.json();
       setParsedText(resultJson.text || "");
-      setStatus("✅ Plik przetworzony pomyślnie. Możesz teraz analizować.");
+      setStatus("Plik przetworzony pomyślnie ✅ Możesz teraz analizować.");
       // Resetuj wyniki analizy po nowym uploadzie
       setSummaryResult(null);
       setClassificationResult(null);
@@ -65,7 +72,7 @@ function UploadForm({
         // ❌ Backend zwrócił error_response
         setSummaryResult(data);
         setStatus(
-          `❌ Błąd streszczenia: ${data.error?.message || "Nieznany błąd"}`
+          `❌ Błąd streszczenia: ${data.error?.message || "Nieznany błąd"}`,
         );
       } else {
         // ✅ normalny wynik
@@ -92,14 +99,14 @@ function UploadForm({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: parsedText }),
-        }
+        },
       );
       if (!response.ok) throw new Error("❌ Błąd podczas analizy.");
       const data = await response.json();
       if (data.ok === false) {
         setClassificationResult(data);
         setStatus(
-          `❌ Błąd klasyfikacji: ${data.error?.message || "Nieznany błąd"}`
+          `❌ Błąd klasyfikacji: ${data.error?.message || "Nieznany błąd"}`,
         );
       } else {
         setClassificationResult(data);
@@ -129,7 +136,7 @@ function UploadForm({
       if (data.ok === false) {
         setRiskResult(data);
         setStatus(
-          `❌ Błąd analizy ryzyka: ${data.error?.message || "Nieznany błąd"}`
+          `❌ Błąd analizy ryzyka: ${data.error?.message || "Nieznany błąd"}`,
         );
       } else {
         setRiskResult(data);
@@ -145,7 +152,7 @@ function UploadForm({
     // Walidacja – wszystkie analizy muszą być OK
     if (!summaryResult?.ok || !classificationResult?.ok || !riskResult?.ok) {
       setStatus(
-        "❌ Potrzebujesz kompletnej analizy, aby zapisać dokument do historii."
+        "❌ Potrzebujesz kompletnej analizy, aby zapisać dokument do historii.",
       );
       return;
     }
@@ -176,67 +183,105 @@ function UploadForm({
   };
 
   return (
-    <div>
-      <h2>📄 Wgraj plik PDF</h2>
-      <input type="file" accept="application/pdf" onChange={handleFileChange} />
-      <button onClick={handleUpload}>📤 Wyślij</button>
-      {status && (
-        <p>
-          <strong>Status:</strong> {status}
-        </p>
-      )}
+    <div className={styles2.card}>
+      <h2 className={styles.header}>
+        <FaRegFilePdf size={20} /> Prześlij dokument do analizy
+      </h2>
+      <div className={styles.uploadRow}>
+        <label className={styles.customFileDrop}>
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            className={styles.hiddenInput}
+          />
+          <div className={styles.dropText}>
+            {/* Dynamiczne wyświetlanie nazwy pliku lub zachęty do wgrania */}
+            {file ? (
+              <>
+                <RiFile3Line size={20} />
+                Wybrano: <span className={styles.fileName}>{file.name}</span>
+              </>
+            ) : (
+              <>
+                <RiFileAddLine size={20} />
+                Kliknij tutaj, aby wybrać plik PDF z dysku
+              </>
+            )}
+          </div>
+        </label>
+        <Button variant="primary" onClick={handleUpload}>
+          Wyślij plik
+          <RiMailSendLine size={20} />
+        </Button>
+      </div>
+
+      {status && <div className={styles.statusMessage}>{status}</div>}
+
       {parsedText && (
-        <>
-          <h3>📝 Tekst dokumentu (z pliku PDF)</h3>
-          <pre
+        <div className={styles.textPreviewContainer}>
+          <h3
             style={{
-              whiteSpace: "pre-wrap",
-              padding: "1rem",
-              border: "1px solid #333",
-              borderRadius: "5px",
-              maxHeight: "300px",
-              overflowY: "auto",
-              background: "#181818",
-              color: "#fff",
+              color: "#e0f2fe",
+              fontSize: "1.1rem",
+              marginBottom: "0.5rem",
             }}
           >
-            {parsedText}
-          </pre>
-          <div style={{ display: "flex", gap: "1rem", margin: "1rem 0" }}>
-            <button onClick={handleSummary} disabled={loading || !parsedText}>
-              {loading === "summary" ? "Czekaj..." : "Streść dokument"}
-            </button>
-            <button
-              onClick={handleClassification}
-              disabled={loading || !parsedText}
+            Rozpoznany tekst (Podgląd)
+          </h3>
+          <pre className={styles.textPreview}>{parsedText}</pre>
+
+          <div className={styles.buttonGroup}>
+            <Button
+              variant="secondary"
+              onClick={handleSummary}
+              disabled={loading !== ""}
             >
-              {loading === "classification"
-                ? "Czekaj..."
-                : "Klasyfikuj dokument"}
-            </button>
-            <button onClick={handleRisk} disabled={loading || !parsedText}>
-              {loading === "risk" ? "Czekaj..." : "Analizuj ryzyko"}
-            </button>
+              {loading === "summary" ? "Czekaj..." : "Streść dokument 🧠"}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleClassification}
+              disabled={loading !== ""}
+            >
+              {loading === "classification" ? "Czekaj..." : "Klasyfikuj 🏷️"}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleRisk}
+              disabled={loading !== ""}
+            >
+              {loading === "risk" ? "Czekaj..." : "Analizuj ryzyko ⚠️"}
+            </Button>
           </div>
-          <div style={{ marginTop: "1rem" }}>
-            <button
+
+          <div
+            style={{
+              marginTop: "1.5rem",
+              borderTop: "1px solid rgba(255,255,255,0.05)",
+              paddingTop: "1rem",
+            }}
+          >
+            <Button
+              variant="primary"
               onClick={handleSaveAnalysis}
               disabled={!isLoggedIn}
-              title={
-                !isLoggedIn
-                  ? "Musisz być zalogowany, aby zapisać dokument do historii."
-                  : ""
-              }
             >
-              💾 Zapisz do historii
-            </button>
+              Zapisz wyniki w historii 💾
+            </Button>
             {!isLoggedIn && (
-              <div style={{ color: "#ff8080", marginTop: "0.5rem" }}>
+              <div
+                style={{
+                  color: "#ff8080",
+                  marginTop: "0.5rem",
+                  fontSize: "0.85rem",
+                }}
+              >
                 Musisz być zalogowany, aby zapisać dokument do historii.
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

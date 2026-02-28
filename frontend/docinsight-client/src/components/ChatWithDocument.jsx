@@ -1,136 +1,133 @@
+// src/components/ChatWithDocument.jsx
 import { useState } from "react";
+import Button from "./Button";
+import styles from "./ChatWithDocument.module.css"; // 👈 Podpinamy style
 
 function ChatWithDocument({ documentText }) {
   const [question, setQuestion] = useState("");
-  const [chatHistory, setChatHistory] = useState([]); // [{role: "user"|"ai", text: "..."}]
+  const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleAsk = async () => {
-    /* nie wysyłamy zapytania jeśli nie ma pytania */
-    if (!question) return;
+    // Zapobieganie wysyłaniu pustych znaków (np. samych spacji)
+    if (!question.trim()) return;
+
     setLoading(true);
-    {
-      /* re-render komponentu po otrzymaniu pytania */
-    }
-    setChatHistory((prev) => [...prev, { role: "user", text: question }]);
 
-    const response = await fetch("http://localhost:5191/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: documentText, question }),
-    });
-    const data = await response.json();
-    {
-      /* re-render komponentu po otrzymaniu odpowiedzi */
-    }
-    const aiMessage =
-      data.ok === false
-        ? `❌ ${data.error?.message || "Błąd analizy"}`
-        : data.data?.answer || "—";
+    // Zapisujemy treść do wysłania
+    const currentQuestion = question.trim();
 
-    setChatHistory((prev) => [...prev, { role: "ai", text: aiMessage }]);
+    // 1. Dodajemy pytanie do widoku
+    setChatHistory((prev) => [
+      ...prev,
+      { role: "user", text: currentQuestion },
+    ]);
+
+    // 2. UX MENTORING: Natychmiast czyścimy input, zanim przyjdzie odpowiedź!
     setQuestion("");
-    {
-      /* odblokowujemy czat */
+
+    try {
+      const response = await fetch("http://localhost:5191/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // Wysyłamy zmienną currentQuestion, bo 'question' w stanie zostało już wyczyszczone
+        body: JSON.stringify({ text: documentText, question: currentQuestion }),
+      });
+
+      const data = await response.json();
+
+      const aiMessage =
+        data.ok === false
+          ? `❌ ${data.error?.message || "Błąd serwera AI"}`
+          : data.data?.answer || "Brak odpowiedzi.";
+
+      // 3. Dodajemy odpowiedź AI
+      setChatHistory((prev) => [...prev, { role: "ai", text: aiMessage }]);
+    } catch (err) {
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "ai", text: `❌ Błąd połączenia: ${err.message}` },
+      ]);
     }
+
     setLoading(false);
   };
 
+  // UX MENTORING: Obsługa entera
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Blokujemy przejście do nowej linii
+      handleAsk(); // Wysyłamy wiadomość
+    }
+  };
+
   return (
-    <div
-      style={{
-        marginTop: "2rem",
-        padding: "1rem",
-        border: "1px solid #333",
-        background: "#181818",
-        borderRadius: "10px",
-        color: "#f1f1f1",
-      }}
-    >
-      <h3 style={{ color: "#fff" }}>💬 Czat z dokumentem</h3>
-      <div
-        style={{
-          maxHeight: "300px",
-          overflowY: "auto",
-          background: "#222",
-          padding: "1rem",
-          marginBottom: "1rem",
-          borderRadius: "8px",
-          border: "1px solid #333",
-        }}
-      >
-        {/* iterujemy po tablicy chatHistory, callback (=>) zwraca element JSX (cały poniższy div dla konkretnej msg i idx (id)) */}
-        {chatHistory.map((msg, idx) => (
+    <div className={styles.chatCard}>
+      <h3 className={styles.header}>Czat z Asystentem AI 🤖</h3>
+
+      <div className={styles.messagesArea}>
+        {chatHistory.length === 0 && !loading && (
           <div
-            key={idx}
             style={{
-              textAlign: msg.role === "user" ? "right" : "left",
-              margin: "0.5rem 0",
+              textAlign: "center",
+              color: "#7dd3fc",
+              opacity: 0.6,
+              marginTop: "auto",
+              marginBottom: "auto",
             }}
           >
-            <span
-              style={{
-                display: "inline-block",
-                background: msg.role === "user" ? "#0057b8" : "#333",
-                color: "#fff",
-                borderRadius: "16px",
-                padding: "0.5rem 1rem",
-                maxWidth: "80%",
-                wordBreak: "break-word",
-                fontWeight: msg.role === "user" ? "bold" : "normal",
-                boxShadow:
-                  msg.role === "user"
-                    ? "0 2px 8px rgba(0,87,184,0.15)"
-                    : "0 2px 8px rgba(0,0,0,0.15)",
-              }}
-            >
-              <strong
-                style={{ color: msg.role === "user" ? "#aeefff" : "#ffb800" }}
-              >
-                {msg.role === "user" ? "Ty" : "AI"}:
-              </strong>{" "}
-              {msg.text}
+            Zadaj pierwsze pytanie dotyczące dokumentu...
+          </div>
+        )}
+
+        {chatHistory.map((msg, index) => (
+          <div
+            key={index}
+            className={`${styles.messageWrapper} ${
+              msg.role === "user" ? styles.userWrapper : styles.aiWrapper
+            }`}
+          >
+            <span className={styles.roleLabel}>
+              {msg.role === "user" ? "Ty" : "DocInsight AI"}
             </span>
+            <div
+              className={`${styles.messageBubble} ${
+                msg.role === "user" ? styles.userBubble : styles.aiBubble
+              }`}
+            >
+              {msg.text}
+            </div>
           </div>
         ))}
-        {/* informacja podczas ładowania */}
-        {loading && <div style={{ color: "#aaa" }}>AI pisze odpowiedź...</div>}
+
+        {loading && (
+          <div className={styles.loadingText}>
+            AI analizuje i pisze odpowiedź...
+          </div>
+        )}
       </div>
-      <textarea
-        rows={2}
-        style={{
-          width: "100%",
-          background: "#222",
-          color: "#fff",
-          border: "1px solid #333",
-          borderRadius: "8px",
-          padding: "0.5rem",
-        }}
-        value={question}
-        /* zmiana stanu przy wpisywaniu pytania */
-        onChange={(e) => setQuestion(e.target.value)}
-        placeholder="Wpisz pytanie..."
-        /* blokuejmy możliwośc pytania, gdy czekamy na odpowiedź */
-        disabled={loading}
-      />
-      <button
-        onClick={handleAsk}
-        /* wyłączony przycisk jeśli ładuje się odpowiedź lub nie wpisano pytania */
-        disabled={loading || !question}
-        style={{
-          marginTop: "0.5rem",
-          background: "#0057b8",
-          color: "#fff",
-          border: "none",
-          borderRadius: "8px",
-          padding: "0.5rem 1.5rem",
-          fontWeight: "bold",
-          cursor: loading || !question ? "not-allowed" : "pointer",
-          opacity: loading || !question ? 0.6 : 1,
-        }}
-      >
-        {loading ? "Czekaj..." : "Zadaj pytanie"}
-      </button>
+
+      <div className={styles.inputArea}>
+        <textarea
+          className={styles.textArea}
+          rows={3}
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          onKeyDown={handleKeyDown} // 👈 Podpięcie akcji Entera
+          placeholder="Zapytaj o szczegóły w dokumencie (Enter, aby wysłać)..."
+          disabled={loading}
+        />
+
+        {/* Korzystamy z Twojego globalnego komponentu Button! */}
+        <Button
+          variant="primary"
+          onClick={handleAsk}
+          disabled={loading || !question.trim()}
+          className={styles.submitBtn}
+        >
+          {loading ? "Wysyłanie..." : "Wyślij"}
+        </Button>
+      </div>
     </div>
   );
 }

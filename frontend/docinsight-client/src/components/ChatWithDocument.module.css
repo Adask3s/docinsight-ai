@@ -1,0 +1,158 @@
+/* src/components/ChatWithDocument.module.css */
+
+.chatCard {
+  background: rgba(10, 20, 40, 0.65);
+  border: 1px solid rgba(0, 119, 182, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 20, 40, 0.4);
+  backdrop-filter: blur(12px);
+  margin-bottom: 2rem; /* Odstęp od raportu pod spodem */
+
+  /* MENTORING: Te 3 linijki sprawiają, że czat wypełnia całą wysokość prawej kolumny */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 500px;
+}
+
+.chatCard:hover {
+  transform: translateY(-2px);
+  /* Przy hoverze karta zaczyna "świecić" delikatnym, niebieskim światłem */
+  box-shadow: 0 12px 32px rgba(0, 87, 184, 0.25);
+  border-color: rgba(0, 119, 182, 0.4);
+}
+
+.header {
+  color: #e0f2fe;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- OBSZAR WIADOMOŚCI --- */
+.messagesArea {
+  flex-grow: 1; /* MENTORING: To każe temu kontenerowi zająć całą wolną przestrzeń między nagłówkiem a polem wpisywania */
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 119, 182, 0.15);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-height: 600px; /* Ochrona przed nieskończonym rozciąganiem */
+}
+
+/* Nowoczesny, cienki pasek przewijania */
+.messagesArea::-webkit-scrollbar {
+  width: 6px;
+}
+.messagesArea::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.messagesArea::-webkit-scrollbar-thumb {
+  background: rgba(0, 119, 182, 0.5);
+  border-radius: 4px;
+}
+
+/* --- DYMKI CZATU (BUBBLES) --- */
+.messageWrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%; /* Dymki nie będą dotykać drugiego końca ekranu */
+}
+
+/* Użytkownik zawsze do prawej */
+.userWrapper {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+/* AI zawsze do lewej */
+.aiWrapper {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.roleLabel {
+  font-size: 0.75rem;
+  color: #7dd3fc;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.messageBubble {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  word-wrap: break-word; /* Zabezpieczenie przed długimi słowami bez spacji */
+}
+
+.userBubble {
+  background: var(--accent-blue);
+  color: #fff;
+  border-bottom-right-radius: 2px; /* Ostry róg w stronę awatara użytkownika */
+  box-shadow: 0 4px 12px rgba(0, 87, 184, 0.3);
+}
+
+.aiBubble {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 119, 182, 0.3);
+  color: #e0f2fe;
+  border-bottom-left-radius: 2px; /* Ostry róg w stronę AI */
+}
+
+.loadingText {
+  font-size: 0.85rem;
+  color: #7dd3fc;
+  font-style: italic;
+  align-self: flex-start;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* --- POLE WPISYWANIA --- */
+.inputArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.textArea {
+  width: 100%;
+  background: rgba(0, 87, 184, 0.05);
+  border: 1px solid rgba(0, 119, 182, 0.3);
+  color: #e0f2fe;
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: none; /* Blokujemy rozciąganie okienka myszką przez usera */
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.textArea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(0, 87, 184, 0.2);
+}
