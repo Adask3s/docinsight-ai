@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Dashboard from "./components/Dashboard";
-import AnalysisView from "./components/AnalysisView";
-import AuthPanel from "./components/AuthPanel";
+import Dashboard from "./components/dashboard/Dashboard";
+import AnalysisView from "./components/analysis/AnalysisView";
+import AuthPanel from "./components/auth/AuthPanel";
 
 function App() {
   const [parsedText, setParsedText] = useState("");

@@ -15,9 +15,7 @@ function DocumentsList({ documents, onSelectDocument, onDeleteDocument }) {
   return (
     <div className={styles.listContainer}>
       {documents.length === 0 ? (
-        <p style={{ textAlign: "center", color: "#888" }}>
-          Brak zapisanych dokumentów.
-        </p>
+        <p className={styles.emptyText}>Brak zapisanych dokumentów.</p>
       ) : (
         <table className={styles.table}>
           <thead>

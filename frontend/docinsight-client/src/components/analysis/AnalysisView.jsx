@@ -2,7 +2,7 @@
 import UploadForm from "./UploadForm";
 import AnalysisReport from "./AnalysisReport";
 import ChatWithDocument from "./ChatWithDocument";
-import Button from "./Button"; // <--- Zmiana: Używamy Twojego gotowego komponentu Button
+import Button from "../ui/Button"; // <--- Zmiana: Używamy Twojego gotowego komponentu Button
 import styles from "./AnalysisView.module.css";
 
 function AnalysisView({
@@ -51,19 +51,7 @@ function AnalysisView({
 
           {/* A jeśli JESTEŚMY w historii, pokażemy ładny komunikat */}
           {isHistoryView && (
-            <div
-              style={{
-                background: "rgba(0, 119, 182, 0.1)",
-                border: "1px solid rgba(0, 119, 182, 0.3)",
-                color: "#bae6fd",
-                padding: "1rem 1.5rem",
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                fontWeight: 600,
-              }}
-            >
+            <div className={styles.historyBanner}>
               Oglądasz archiwalną analizę. Nie możesz jej modyfikować.
             </div>
           )}
@@ -82,17 +70,7 @@ function AnalysisView({
           {parsedText ? (
             <ChatWithDocument documentText={parsedText} />
           ) : (
-            /* Zastępczy tekst, gdy dokument nie jest wgrany */
-            <div
-              style={{
-                color: "#bae6fd",
-                textAlign: "center",
-                padding: "2rem",
-                border: "1px dashed rgba(0, 119, 182, 0.4)",
-                borderRadius: "12px",
-                background: "rgba(0, 87, 184, 0.05)",
-              }}
-            >
+            <div className={styles.emptyChatMessage}>
               Upload a document to start chatting with AI.
             </div>
           )}

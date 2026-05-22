@@ -47,6 +47,29 @@
   border-radius: 8px;
   text-align: center;
   font-size: 0.9rem;
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+.statusSuccess {
+  background: rgba(52, 199, 89, 0.04);
+  color: var(--accent-green);
+}
+
+.statusError {
+  background: rgba(255, 0, 0, 0.04);
+  color: #ffb3b3;
+}
+
+.statusInfo {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.descriptionText {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
 
 .tabs {

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Button from "./Button";
-import FormInput from "./FormInput";
+import Button from "../ui/Button";
+import FormInput from "../ui/FormInput";
 import styles from "./AuthPanel.module.css";
-import utils from "../styles/utils.module.css";
+import utils from "../../styles/utils.module.css";
 
 function AuthPanel({ onAuth }) {
   const [mode, setMode] = useState("login");
@@ -109,16 +109,8 @@ function AuthPanel({ onAuth }) {
             {isLoggedIn ? (
               <div>
                 <div className={styles.statusBox}>
-                  <p style={{ color: "var(--text-primary)", fontWeight: 500 }}>
-                    Zalogowano ✓
-                  </p>
-                  <p
-                    style={{
-                      color: "var(--text-secondary)",
-                      fontSize: "0.875rem",
-                      marginTop: "0.25rem",
-                    }}
-                  >
+                  <p className={styles.statusInfo}>Zalogowano ✓</p>
+                  <p className={styles.descriptionText}>
                     Teraz masz dostęp do wszystkich funkcji analizy dokumentów.
                     Kliknij "Wyloguj", aby zakończyć sesję.
                   </p>
@@ -187,17 +179,11 @@ function AuthPanel({ onAuth }) {
 
                 {status && (
                   <div
-                    className={styles.statusBox}
-                    style={{
-                      background: status.includes("Error")
-                        ? "rgba(255,0,0,0.04)"
-                        : "rgba(52,199,89,0.04)",
-                      color: status.includes("Error")
-                        ? "#ffb3b3"
-                        : "var(--accent-green)",
-                      whiteSpace: "pre-wrap", // Respektuje znaki \n
-                      textAlign: "left", // Wyrównuje listę do lewej
-                    }}
+                    className={`${styles.statusBox} ${
+                      status.includes("Error")
+                        ? styles.statusError
+                        : styles.statusSuccess
+                    }`}
                   >
                     {status}
                   </div>

@@ -48,18 +48,10 @@ function SeverityBadge({ level }) {
 function KeywordBar({ label, value, max }) {
   const width = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
   return (
-    <div style={{ marginBottom: "12px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "0.85rem",
-          color: "#ccc",
-          marginBottom: "4px",
-        }}
-      >
+    <div className={styles.keywordRow}>
+      <div className={styles.keywordHeader}>
         <span>{label}</span>
-        <span style={{ fontWeight: "bold" }}>{value}</span>
+        <span className={styles.keywordValue}>{value}</span>
       </div>
       <div className={styles.progressBarBg}>
         <div
@@ -96,7 +88,7 @@ export default function AnalysisReport({
           <h3 className={styles.cardHeader}>Streszczenie 🧠</h3>
 
           {summaryResult.ok === false ? (
-            <div style={{ color: "#ff8080" }}>
+            <div className={styles.errorText}>
               ❌ {summaryResult.error?.message || "Błąd analizy"}
             </div>
           ) : (
@@ -106,17 +98,8 @@ export default function AnalysisReport({
           )}
 
           {summaryResult.ok && (
-            <div style={{ marginTop: "1.5rem" }}>
-              <h4
-                style={{
-                  color: "#aaa",
-                  fontSize: "0.9rem",
-                  textTransform: "uppercase",
-                  marginBottom: "1rem",
-                }}
-              >
-                Statystyki tekstu
-              </h4>
+            <div className={styles.sectionGroup}>
+              <h4 className={styles.sectionTitle}>Statystyki tekstu</h4>
               <div className={styles.statsGrid}>
                 <Stat
                   label="Liczba słów"
@@ -151,7 +134,7 @@ export default function AnalysisReport({
         <section className={styles.card}>
           <h3 className={styles.cardHeader}>Klasyfikacja Dokumentu 🏷️</h3>
           {classificationResult.ok === false ? (
-            <div style={{ color: "#ff8080" }}>
+            <div className={styles.errorText}>
               ❌ {classificationResult.error?.message || "Błąd analizy"}
             </div>
           ) : (
@@ -162,15 +145,9 @@ export default function AnalysisReport({
                   classificationResult.data?.classification?.type || "Nieznany"
                 }
               />
-              <div className={styles.statBox} style={{ gridColumn: "span 2" }}>
+              <div className={`${styles.statBox} ${styles.fullWidthStat}`}>
                 <span className={styles.statLabel}>Kategorie tematyczne</span>
-                <span
-                  style={{
-                    color: "var(--accent-blue)",
-                    fontWeight: 500,
-                    marginTop: "4px",
-                  }}
-                >
+                <span className={styles.categoryList}>
                   {classificationResult.data?.classification?.categories?.join(
                     ", ",
                   ) || "—"}
@@ -187,35 +164,21 @@ export default function AnalysisReport({
           <h3 className={styles.cardHeader}>Analiza Ryzyka ⚠️</h3>
 
           {riskResult.ok === false ? (
-            <div style={{ color: "#ff8080" }}>
+            <div className={styles.errorText}>
               ❌ {riskResult.error?.message || "Nieznany błąd"}
             </div>
           ) : (
             <>
               {/* Ogólny Wynik Ryzyka */}
               {typeof riskResult.data?.risk_score === "number" && (
-                <div style={{ marginBottom: "2rem" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-end",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "1.2rem",
-                        fontWeight: 600,
-                        color: "#fff",
-                      }}
-                    >
+                <div className={styles.riskScoreBlock}>
+                  <div className={styles.riskScoreHeader}>
+                    <span className={styles.riskScoreLabel}>
                       Ogólny poziom ryzyka
                     </span>
                     <span
+                      className={styles.riskScoreValue}
                       style={{
-                        fontSize: "2rem",
-                        fontWeight: 800,
                         color:
                           riskResult.data.risk_score > 70
                             ? "#ff4d4d"
@@ -228,8 +191,7 @@ export default function AnalysisReport({
                     </span>
                   </div>
                   <div
-                    className={styles.progressBarBg}
-                    style={{ height: "12px" }}
+                    className={`${styles.progressBarBg} ${styles.riskScoreBar}`}
                   >
                     <div
                       className={styles.progressBarFill}
@@ -248,31 +210,17 @@ export default function AnalysisReport({
               )}
 
               {/* Słowa kluczowe */}
-              <div style={{ marginBottom: "2rem" }}>
-                <h4
-                  style={{
-                    color: "#aaa",
-                    fontSize: "0.9rem",
-                    textTransform: "uppercase",
-                    marginBottom: "1rem",
-                  }}
-                >
+              <div className={styles.riskIntro}>
+                <h4 className={styles.riskHeading}>
                   Wykryte zapalniki (Triggers)
                 </h4>
                 {Object.keys(riskResult.data?.keyword_frequencies || {})
                   .length === 0 ? (
-                  <div style={{ color: "#888", fontSize: "0.9rem" }}>
+                  <div className={styles.emptyMessage}>
                     Brak niepokojących słów.
                   </div>
                 ) : (
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns:
-                        "repeat(auto-fit, minmax(200px, 1fr))",
-                      gap: "0 2rem",
-                    }}
-                  >
+                  <div className={styles.keywordGrid}>
                     {Object.entries(riskResult.data.keyword_frequencies).map(
                       ([k, v]) => (
                         <KeywordBar
@@ -289,16 +237,7 @@ export default function AnalysisReport({
 
               {/* Fragmenty wysokiego ryzyka */}
               <div>
-                <h4
-                  style={{
-                    color: "#aaa",
-                    fontSize: "0.9rem",
-                    textTransform: "uppercase",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  Zidentyfikowane klauzule
-                </h4>
+                <h4 className={styles.riskHeading}>Zidentyfikowane klauzule</h4>
                 {Array.isArray(riskResult.data?.risk_analysis) &&
                 riskResult.data.risk_analysis.length > 0 ? (
                   <div>
@@ -325,7 +264,7 @@ export default function AnalysisReport({
                             “{r?.text_fragment || "—"}”
                           </div>
                           <div className={styles.riskReason}>
-                            <strong style={{ color: "#fff" }}>
+                            <strong className={styles.riskReasonStrong}>
                               Dlaczego:{" "}
                             </strong>{" "}
                             {r?.reason || "—"}
@@ -335,7 +274,7 @@ export default function AnalysisReport({
                     })}
                   </div>
                 ) : (
-                  <div style={{ color: "#888", fontSize: "0.9rem" }}>
+                  <div className={styles.emptyMessage}>
                     Nie znaleziono niebezpiecznych klauzul.
                   </div>
                 )}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "./Button"; // Używamy Twojego gotowego przycisku!
+import Button from "../ui/Button"; // Używamy Twojego gotowego przycisku!
 import styles from "./UploadForm.module.css"; // Importujemy nowe style
 import styles2 from "./AnalysisReport.module.css";
 import { RiMailSendLine } from "react-icons/ri";
@@ -220,15 +220,7 @@ function UploadForm({
 
       {parsedText && (
         <div className={styles.textPreviewContainer}>
-          <h3
-            style={{
-              color: "#e0f2fe",
-              fontSize: "1.1rem",
-              marginBottom: "0.5rem",
-            }}
-          >
-            Rozpoznany tekst (Podgląd)
-          </h3>
+          <h3 className={styles.previewHeading}>Rozpoznany tekst (Podgląd)</h3>
           <pre className={styles.textPreview}>{parsedText}</pre>
 
           <div className={styles.buttonGroup}>
@@ -255,13 +247,7 @@ function UploadForm({
             </Button>
           </div>
 
-          <div
-            style={{
-              marginTop: "1.5rem",
-              borderTop: "1px solid rgba(255,255,255,0.05)",
-              paddingTop: "1rem",
-            }}
-          >
+          <div className={styles.saveSection}>
             <Button
               variant="primary"
               onClick={handleSaveAnalysis}
@@ -270,13 +256,7 @@ function UploadForm({
               Zapisz wyniki w historii 💾
             </Button>
             {!isLoggedIn && (
-              <div
-                style={{
-                  color: "#ff8080",
-                  marginTop: "0.5rem",
-                  fontSize: "0.85rem",
-                }}
-              >
+              <div className={styles.saveWarning}>
                 Musisz być zalogowany, aby zapisać dokument do historii.
               </div>
             )}

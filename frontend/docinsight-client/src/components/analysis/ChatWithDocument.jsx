@@ -1,6 +1,6 @@
 // src/components/ChatWithDocument.jsx
 import { useState } from "react";
-import Button from "./Button";
+import Button from "../ui/Button";
 import styles from "./ChatWithDocument.module.css"; // 👈 Podpinamy style
 
 function ChatWithDocument({ documentText }) {
@@ -67,15 +67,7 @@ function ChatWithDocument({ documentText }) {
 
       <div className={styles.messagesArea}>
         {chatHistory.length === 0 && !loading && (
-          <div
-            style={{
-              textAlign: "center",
-              color: "#7dd3fc",
-              opacity: 0.6,
-              marginTop: "auto",
-              marginBottom: "auto",
-            }}
-          >
+          <div className={styles.emptyPrompt}>
             Zadaj pierwsze pytanie dotyczące dokumentu...
           </div>
         )}

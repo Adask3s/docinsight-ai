@@ -73,6 +73,24 @@
   padding-top: 1.5rem;
 }
 
+.previewHeading {
+  color: #e0f2fe;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.saveSection {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1rem;
+}
+
+.saveWarning {
+  color: #ff8080;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
 .textPreview {
   background: rgba(5, 10, 25, 0.6);
   color: #bae6fd;

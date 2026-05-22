@@ -109,6 +109,26 @@
   padding: 0 1rem;
 }
 
+.errorMessage {
+  color: #ff8080;
+}
+
+.heroButtonWrapper {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.heroButton {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+}
+
+.latestDate {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  color: var(--text-secondary);
+}
+
 /* USER PROFILE BADGE (Zalogowany jako) */
 .userInfoBadge {
   display: inline-flex;

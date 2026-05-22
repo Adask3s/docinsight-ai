@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import DocumentsList from "./DocumentsList"; // <--- Importujemy komponent
 import styles from "./Dashboard.module.css";
-import utils from "../styles/utils.module.css";
-import Button from "./Button"; // Nasz komponent!
+import utils from "../../styles/utils.module.css";
+import Button from "../ui/Button"; // Nasz komponent!
 import { FaCirclePlus } from "react-icons/fa6"; // Twoja ikona!
 
 function Dashboard({ onLogout, goToAnalysis, onLoadDocument }) {
@@ -152,14 +152,7 @@ function Dashboard({ onLogout, goToAnalysis, onLoadDocument }) {
         {/* KARTA 2: Ostatnia aktywność (sama data, bez paska) */}
         <div className={styles.card}>
           <h3>Ostatnia Analiza</h3>
-          <p
-            style={{
-              fontSize: stats.saved > 0 ? "1.5rem" : "1.2rem",
-              marginTop: "10px",
-            }}
-          >
-            {stats.latestDate}
-          </p>
+          <p className={styles.latestDate}>{stats.latestDate}</p>
         </div>
         {/* KARTA 2: Zapisane analizy (z dynamicznym paskiem postępu) */}
         <div className={styles.card}>
@@ -175,11 +168,11 @@ function Dashboard({ onLogout, goToAnalysis, onLoadDocument }) {
         </div>
       </section>
 
-      <div style={{ marginBottom: "2rem", textAlign: "center" }}>
+      <div className={styles.heroButtonWrapper}>
         <Button
           variant="primary"
           onClick={goToAnalysis}
-          style={{ padding: "0.8rem 2rem", fontSize: "1.1rem" }} // Powiększamy go lekko
+          className={styles.heroButton}
         >
           <FaCirclePlus size={24} color="#00bfff" />
           Nowa Analiza
@@ -188,7 +181,7 @@ function Dashboard({ onLogout, goToAnalysis, onLoadDocument }) {
 
       <section className={styles.documentsSection}>
         <h2 className={styles.sectionTitle}>Historia dokumentów</h2>
-        {error && <p style={{ color: "#ff8080" }}>{error}</p>}
+        {error && <p className={styles.errorMessage}>{error}</p>}
 
         {/* UŻYWAMY KOMPONENTU - CZYSTO I ZGODNIE Z DRY */}
         <DocumentsList

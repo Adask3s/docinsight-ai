@@ -1,4 +1,4 @@
-@import "../styles/utils.module.css";
+@import "../../styles/utils.module.css";
 
 /* src/components/AnalysisView.module.css */
 
@@ -44,6 +44,27 @@
   /* Kolumna boczna może być "przypięta" (sticky), ale na razie po prostu ją tu zdefiniujmy */
   display: flex;
   flex-direction: column;
+}
+
+.historyBanner {
+  background: rgba(0, 119, 182, 0.1);
+  border: 1px solid rgba(0, 119, 182, 0.3);
+  color: #bae6fd;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.emptyChatMessage {
+  color: #bae6fd;
+  text-align: center;
+  padding: 2rem;
+  border: 1px dashed rgba(0, 119, 182, 0.4);
+  border-radius: 12px;
+  background: rgba(0, 87, 184, 0.05);
 }
 
 /* Responsywność: Na mniejszych ekranach (np. tablety, laptopy) układ wraca do jednej kolumny */

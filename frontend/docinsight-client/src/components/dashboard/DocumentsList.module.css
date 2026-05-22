@@ -6,6 +6,11 @@
   overflow-x: auto; /* Zabezpieczenie na małe ekrany */
 }
 
+.emptyText {
+  text-align: center;
+  color: #888;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
