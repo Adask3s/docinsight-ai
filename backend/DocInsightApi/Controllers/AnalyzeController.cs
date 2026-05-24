@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocInsightApi.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Net.Http.Headers;
 
@@ -21,6 +22,9 @@ namespace DocInsightApi.Controllers
         [HttpPost("summary")]
         public async Task<IActionResult> AnalyzeSummary([FromBody] DocumentTextInput input)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (string.IsNullOrWhiteSpace(input.Text))
                 return BadRequest("Text is empty.");
 
@@ -50,6 +54,9 @@ namespace DocInsightApi.Controllers
         [HttpPost("classification")]
         public async Task<IActionResult> AnalyzeClassification([FromBody] DocumentTextInput input)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (string.IsNullOrWhiteSpace(input.Text))
                 return BadRequest("Text is empty.");
 
@@ -77,6 +84,9 @@ namespace DocInsightApi.Controllers
         [HttpPost("risk")]
         public async Task<IActionResult> AnalyzeRisk([FromBody] DocumentTextInput input)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (string.IsNullOrWhiteSpace(input.Text))
                 return BadRequest("Text is empty.");
 
@@ -100,10 +110,4 @@ namespace DocInsightApi.Controllers
         }
     }
 
-    // Prosty obiekt reprezentujący strukturę danych z frontendu
-    // Potrzebny, by deserializacja JSON-a({ "text": "..." }) działała automatycznie
-    public class DocumentTextInput
-    {
-        public string Text { get; set; }
-    }
 }

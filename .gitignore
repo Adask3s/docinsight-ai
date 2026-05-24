@@ -1,24 +1,44 @@
-# --- KLUCZE I SEKRETY (NAJWAŻNIEJSZE) ---
+# KLUCZE I SEKRETY
 .env
 .env.local
+.env.*.local
 *.pem
 
-# --- Python (parser-service) ---
+# BAZY DANYCH
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
 __pycache__/
 *.pyc
+*.pyo
 .venv/
 venv/
 parser-service/.venv/
 
-# --- Node / React (frontend) ---
+# Node/React 
 node_modules/
 dist/
 build/
 .DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# --- .NET (backend) ---
+# .NET
 bin/
 obj/
 .vs/
 *.user
 appsettings.Development.json
+
+# IDE i edytory
+.idea/
+.vscode/
+
+# Dodatkowe pliki
+*.log
+*.bak
+*.tmp
+*.pdf

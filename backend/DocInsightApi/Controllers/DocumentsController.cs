@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DocInsightApi.Data;
+﻿using DocInsightApi.Data;
+using DocInsightApi.DTOs;
 using DocInsightApi.Models;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace DocInsightApi.Controllers
 {
@@ -20,7 +21,6 @@ namespace DocInsightApi.Controllers
         }
 
         // GET /documents - lista dokumentów
-        [HttpGet]
         [HttpGet]
         public IActionResult GetDocuments()
         {
@@ -58,8 +58,11 @@ namespace DocInsightApi.Controllers
 
         // POST /documents/save - zapis analizy
         [HttpPost("save")]
-        public IActionResult SaveDocument([FromBody] SaveDocumentDto dto)
+        public async Task<IActionResult> SaveDocument([FromBody] SaveDocumentDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             // sprawdzenie pełnej analizy
             if (dto.Summary == null || dto.Classification == null || dto.Risk == null)
             {
@@ -79,14 +82,14 @@ namespace DocInsightApi.Controllers
             };
 
             _db.Documents.Add(document);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return Ok(new { message = "✅ Dokument został zapisany w historii." });
         }
 
         // DELETE /documents/{id} - usuń dokument użytkownika
         [HttpDelete("{id}")]
-        public IActionResult DeleteDocument(int id)
+        public async Task<IActionResult> DeleteDocument(int id)
         {
             // Pobieramy UserId z tokena JWT (zalogowany użytkownik)
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -100,18 +103,10 @@ namespace DocInsightApi.Controllers
 
             // Usuwamy dokument z bazy i zapisujemy zmiany
             _db.Documents.Remove(doc);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return Ok(new { message = "✅ Dokument usunięty z historii." });
         }
-    }
-
-    public class SaveDocumentDto
-    {
-        public string FileName { get; set; }
-        public object Summary { get; set; }
-        public object Classification { get; set; }
-        public object Risk { get; set; }
     }
 
 }

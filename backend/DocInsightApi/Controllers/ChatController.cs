@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocInsightApi.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,10 @@ namespace DocInsightApi.Controllers
         [HttpPost]
         public async Task<IActionResult> ChatWithDocument([FromBody] ChatRequest request)
         {
-            var pythonEndpoint = "http://localhost:8000/chat"; // Twój mikroserwis Python
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var pythonEndpoint = "http://localhost:8000/chat"; // mikroserwis Python
 
             var payload = new
             {
@@ -27,7 +31,7 @@ namespace DocInsightApi.Controllers
                 question = request.Question
             };
             var json = System.Text.Json.JsonSerializer.Serialize(payload);
-            Console.WriteLine(json); // sprawdź, czy jest poprawny
+            Console.WriteLine(json); // sprawdzamy, czy jest poprawny
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(pythonEndpoint, content);
@@ -37,9 +41,4 @@ namespace DocInsightApi.Controllers
         }
     }
 
-    public class ChatRequest
-    {
-        public string Text { get; set; }
-        public string Question { get; set; }
-    }
 }

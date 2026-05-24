@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocInsightApi.DTOs;
 using Microsoft.AspNetCore.Identity;
-using DocInsightApi.Models;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
+using DocInsightApi.Models;
 
 namespace DocInsightApi.Controllers
 {
@@ -26,6 +27,9 @@ namespace DocInsightApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
                 return BadRequest(new { message = "Email i hasło są wymagane." });
 
@@ -45,6 +49,9 @@ namespace DocInsightApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null) return Unauthorized(new { message = "❌ Błędne dane logowania." });
 
@@ -76,17 +83,4 @@ namespace DocInsightApi.Controllers
         }
     }
 
-    // DTO do rejestracji
-    public class RegisterDto
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-
-    // DTO do logowania
-    public class LoginDto
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
 }
