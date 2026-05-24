@@ -23,8 +23,8 @@ function AuthPanel({ onAuth }) {
     setStatus(mode === "login" ? "Logging in..." : "Registering...");
     const url =
       mode === "login"
-        ? "http://localhost:5191/auth/login"
-        : "http://localhost:5191/auth/register";
+        ? `${import.meta.env.VITE_API_URL}/auth/login`
+        : `${import.meta.env.VITE_API_URL}/auth/register`;
 
     try {
       const response = await fetch(url, {

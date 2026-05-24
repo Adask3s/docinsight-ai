@@ -1,8 +1,6 @@
 ﻿using DocInsightApi.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
 
 namespace DocInsightApi.Controllers
 {
@@ -11,10 +9,13 @@ namespace DocInsightApi.Controllers
     public class ChatController : ControllerBase
     {
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _config;
 
-        public ChatController(IHttpClientFactory httpClientFactory)
+        // Wstrzykujemy IConfiguration, by mieć dostęp do appsettings.json
+        public ChatController(IHttpClientFactory httpClientFactory, IConfiguration config)
         {
             _httpClient = httpClientFactory.CreateClient();
+            _config = config;
         }
 
         [HttpPost]
@@ -23,22 +24,20 @@ namespace DocInsightApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var pythonEndpoint = "http://localhost:8000/chat"; // mikroserwis Python
+            // Wyciągamy bezpiecznie link z konfiguracji
+            var pythonUrl = $"{_config["PythonMicroserviceUrl"]}/chat";
 
             var payload = new
             {
                 text = request.Text,
                 question = request.Question
             };
-            var json = System.Text.Json.JsonSerializer.Serialize(payload);
-            Console.WriteLine(json); // sprawdzamy, czy jest poprawny
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(pythonEndpoint, content);
+            // Zamiast "StringContent" i serializacji, używamy wbudowanej metody PostAsJsonAsync, która robi to za nas
+            var response = await _httpClient.PostAsJsonAsync(pythonUrl, payload);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return Content(responseBody, "application/json");
         }
     }
-
 }

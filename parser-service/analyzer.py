@@ -72,6 +72,7 @@ async def query_openai(prompt: str, max_retries: int = MAX_RETRIES) -> str:
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.2,
+                max_tokens=4096,
                 timeout=60,
             )
             return response.choices[0].message.content

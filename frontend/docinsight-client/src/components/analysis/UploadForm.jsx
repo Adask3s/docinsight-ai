@@ -35,7 +35,7 @@ function UploadForm({
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await fetch("http://localhost:5191/upload", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
         method: "POST",
         body: formData,
       });
@@ -60,11 +60,14 @@ function UploadForm({
     setLoading("summary");
     setStatus("Analizuję streszczenie...");
     try {
-      const response = await fetch("http://localhost:5191/analyze/summary", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: parsedText }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/analyze/summary`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: parsedText }),
+        },
+      );
       if (!response.ok) throw new Error("❌ Błąd podczas analizy.");
       const data = await response.json();
 
@@ -94,7 +97,7 @@ function UploadForm({
     setStatus("Analizuję klasyfikację...");
     try {
       const response = await fetch(
-        "http://localhost:5191/analyze/classification",
+        `${import.meta.env.VITE_API_URL}/analyze/classification`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -126,11 +129,14 @@ function UploadForm({
     setLoading("risk");
     setStatus("Analizuję ryzyka...");
     try {
-      const response = await fetch("http://localhost:5191/analyze/risk", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: parsedText }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/analyze/risk`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: parsedText }),
+        },
+      );
       if (!response.ok) throw new Error("❌ Błąd podczas analizy.");
       const data = await response.json();
       if (data.ok === false) {
@@ -166,14 +172,17 @@ function UploadForm({
 
     try {
       const token = localStorage.getItem("jwt_token");
-      const response = await fetch("http://localhost:5191/documents/save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/documents/save`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      });
+      );
       const json = await response.json();
       setStatus(json.message || "✅ Analiza zapisana.");
       if (onSaved) onSaved();

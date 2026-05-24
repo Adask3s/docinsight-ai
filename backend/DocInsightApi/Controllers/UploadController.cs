@@ -10,11 +10,13 @@ namespace DocInsightApi.Controllers;
 public class UploadController : ControllerBase
 {
     private readonly HttpClient _httpClient;
+    private readonly IConfiguration _config;
 
-    // Konstruktor z wstrzyknięciem zależności HttpClient
-    public UploadController(HttpClient httpClient)
+    // Konstruktor z wstrzyknięciem zależności HttpClient oraz IConfiguration
+    public UploadController(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
-        _httpClient = httpClient;
+        _httpClient = httpClientFactory.CreateClient();
+        _config = config;
     }
 
     [HttpPost]
@@ -43,7 +45,10 @@ public class UploadController : ControllerBase
 
         try
         {
-            var response = await _httpClient.PostAsync("http://127.0.0.1:8000/parse", content);
+            // Wyciągamy bezpiecznie link z pliku appsettings.json
+            var pythonUrl = $"{_config["PythonMicroserviceUrl"]}/parse";
+            
+            var response = await _httpClient.PostAsync(pythonUrl, content);
 
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, "Python parser error.");
@@ -53,8 +58,10 @@ public class UploadController : ControllerBase
 
             return Ok(responseBody); // frontend dostaje JSON z {"text": "..."}
         }
+        
         catch (Exception ex)
         {
+            Console.WriteLine($"[UploadController] WYJĄTEK: {ex.Message}");
             return StatusCode(500, $"Internal error: {ex.Message}");
         }
     }

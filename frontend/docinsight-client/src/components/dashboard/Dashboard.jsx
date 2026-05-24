@@ -53,9 +53,12 @@ function Dashboard({ onLogout, goToAnalysis, onLoadDocument }) {
 
     const fetchDocuments = async () => {
       try {
-        const response = await fetch("http://localhost:5191/documents", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/documents`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         if (!response.ok) throw new Error("Error fetching documents");
 
         const data = await response.json();
@@ -90,10 +93,13 @@ function Dashboard({ onLogout, goToAnalysis, onLoadDocument }) {
     if (!token) return;
 
     try {
-      const response = await fetch(`http://localhost:5191/documents/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/documents/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       if (!response.ok) {
         const errData = await response.json();

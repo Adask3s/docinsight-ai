@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Net.Http.Headers;
+using System.Net.Http.Json; // Dodano, aby móc korzystać z czystej metody PostAsJsonAsync
 
 namespace DocInsightApi.Controllers
 {
@@ -11,10 +12,13 @@ namespace DocInsightApi.Controllers
     public class AnalyzeController : ControllerBase
     {
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _config; // Dodano, aby mieć dostęp do appsettings.json
 
-        public AnalyzeController(HttpClient httpClient)
+        // Wstrzykujemy IConfiguration do konstruktora
+        public AnalyzeController(HttpClient httpClient, IConfiguration config)
         {
             _httpClient = httpClient;
+            _config = config;
         }
 
         // Endpoint: POST /analyze/summary
@@ -30,12 +34,14 @@ namespace DocInsightApi.Controllers
 
             try
             {
-                // Serializujemy tekst do JSON-a
-                var jsonPayload = $"{{\"text\": {System.Text.Json.JsonSerializer.Serialize(input.Text)} }}";
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                // Pobieramy bezpiecznie adres mikroserwisu z pliku konfiguracyjnego
+                var pythonUrl = $"{_config["PythonMicroserviceUrl"]}/analyze/summary";
 
+                // Serializujemy tekst do JSON-a
+                // Teraz obiekt tworzy się w locie: 'new { text = input.Text }', a metoda zajmuje się resztą.
+                
                 // Wysyłamy do mikroserwisu Python
-                var response = await _httpClient.PostAsync("http://127.0.0.1:8000/analyze/summary", content);
+                var response = await _httpClient.PostAsJsonAsync(pythonUrl, new { text = input.Text });
 
                 if (!response.IsSuccessStatusCode)
                     return StatusCode((int)response.StatusCode, "Analyzing microservice error (summary).");
@@ -62,10 +68,12 @@ namespace DocInsightApi.Controllers
 
             try
             {
-                var jsonPayload = $"{{\"text\": {System.Text.Json.JsonSerializer.Serialize(input.Text)} }}";
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                // Pobieramy bezpiecznie adres mikroserwisu
+                var pythonUrl = $"{_config["PythonMicroserviceUrl"]}/analyze/classification";
 
-                var response = await _httpClient.PostAsync("http://127.0.0.1:8000/analyze/classification", content);
+                // Serializujemy tekst do JSON-a
+                // Wysyłamy do mikroserwisu Python
+                var response = await _httpClient.PostAsJsonAsync(pythonUrl, new { text = input.Text });
 
                 if (!response.IsSuccessStatusCode)
                     return StatusCode((int)response.StatusCode, "Analyzing microservice error (classification).");
@@ -92,10 +100,12 @@ namespace DocInsightApi.Controllers
 
             try
             {
-                var jsonPayload = $"{{\"text\": {System.Text.Json.JsonSerializer.Serialize(input.Text)} }}";
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                // Pobieramy bezpiecznie adres mikroserwisu
+                var pythonUrl = $"{_config["PythonMicroserviceUrl"]}/analyze/risk";
 
-                var response = await _httpClient.PostAsync("http://127.0.0.1:8000/analyze/risk", content);
+                // Serializujemy tekst do JSON-a
+                // Wysyłamy do mikroserwisu Python
+                var response = await _httpClient.PostAsJsonAsync(pythonUrl, new { text = input.Text });
 
                 if (!response.IsSuccessStatusCode)
                     return StatusCode((int)response.StatusCode, "Analyzing microservice error (risk).");
@@ -109,5 +119,4 @@ namespace DocInsightApi.Controllers
             }
         }
     }
-
 }

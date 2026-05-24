@@ -27,7 +27,7 @@ function ChatWithDocument({ documentText }) {
     setQuestion("");
 
     try {
-      const response = await fetch("http://localhost:5191/chat", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // Wysyłamy zmienną currentQuestion, bo 'question' w stanie zostało już wyczyszczone

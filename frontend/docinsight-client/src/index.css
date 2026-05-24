@@ -1,4 +1,4 @@
-/* Global design tokens and base styles (Tailwind removed). */
+/* Global design tokens and base styles */
 
 :root {
   /* macOS Inspired Colors */
@@ -52,7 +52,7 @@ h1 {
   letter-spacing: -0.02em;
 }
 
-/* Avoid styling the raw `button` element globally — scope to a class if you need a default style. */
+/* Avoid styling the raw `button` element globally - scope to a class if you need a default style. */
 .btn-default {
   border-radius: 8px;
   border: 1px solid transparent;

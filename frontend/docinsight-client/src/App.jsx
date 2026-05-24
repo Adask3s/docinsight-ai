@@ -22,9 +22,12 @@ function App() {
     if (!token) return;
 
     try {
-      const response = await fetch(`http://localhost:5191/documents/${docId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/documents/${docId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       if (!response.ok) {
         alert("Error: Failed to load document analysis");
