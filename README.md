@@ -6,7 +6,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.116-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react)](https://react.dev/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-412991?logo=openai)](https://openai.com/)
-
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ---
 
 ## Overview
@@ -823,6 +823,10 @@ echo %ASPNETCORE_ENVIRONMENT%  # Windows
 ```
 
 ---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ## Author
 
