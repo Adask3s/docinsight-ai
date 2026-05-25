@@ -371,6 +371,77 @@ npm run dev
 Frontend will be available at `http://localhost:5173`
 
 ---
+## 5. Configuration Files Reference
+
+### appsettings.json (Backend - Already in Repo)
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=DocInsightDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
+  "Jwt": {
+    "Key": "ENTER_YOUR_32_CHARACTER_SECRET_KEY_HERE",  // Placeholder only ⚠️
+    "Issuer": "DocInsight",
+    "Audience": "DocInsightUsers",
+    "ExpireHours": 12
+  },
+  "PythonMicroserviceUrl": "http://127.0.0.1:8000"
+}
+```
+
+### appsettings.Development.json (Create Locally - Gitignored)
+
+**Location:** `backend/DocInsightApi/appsettings.Development.json`
+
+```json
+{
+  "Jwt": {
+    "Key": "Zf8kP2mN7vQ1xR9sT4uW6yE3oI5aS7dG9hJ2kL4nM8pB1cV6xZ3rT5yU7iO0qW2e"
+  }
+}
+```
+
+> This file **overrides** values from `appsettings.json` in Development environment. 
+> The JWT key above is an **example** - generate your own!
+
+### .env (Python Service - Create Locally - Gitignored)
+
+**Location:** `parser-AI-service/.env`
+
+```env
+# OpenAI API Configuration
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_MODEL=gpt-4o-mini
+
+# Optional: Custom timeout (default: 60s)
+# OPENAI_TIMEOUT=90
+```
+
+### .env.example
+
+**Location:** `parser-AI-service/.env.example`
+
+```env
+# OpenAI API Configuration
+# Get your API key from: https://platform.openai.com/api-keys
+OPENAI_API_KEY=sk-proj-your_api_key_here
+
+# Recommended models:
+# - gpt-4o-mini (fast, cheap, good for Polish)
+# - gpt-4o (most capable, slower, expensive)
+# - gpt-3.5-turbo (cheapest, worse Polish support)
+OPENAI_MODEL=gpt-4o-mini
+```
+
+---
 
 ### Verify Complete Setup
 
@@ -468,78 +539,6 @@ DocInsightAI/
 │       └── vite.config.js
 │
 └── README.md
-```
-
----
-
-## Configuration Files Reference
-
-### appsettings.json (Backend - Already in Repo)
-
-```json
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=DocInsightDb;Trusted_Connection=True;MultipleActiveResultSets=true"
-  },
-  "Jwt": {
-    "Key": "ENTER_YOUR_32_CHARACTER_SECRET_KEY_HERE",  // Placeholder only ⚠️
-    "Issuer": "DocInsight",
-    "Audience": "DocInsightUsers",
-    "ExpireHours": 12
-  },
-  "PythonMicroserviceUrl": "http://127.0.0.1:8000"
-}
-```
-
-### appsettings.Development.json (Create Locally - Gitignored)
-
-**Location:** `backend/DocInsightApi/appsettings.Development.json`
-
-```json
-{
-  "Jwt": {
-    "Key": "Zf8kP2mN7vQ1xR9sT4uW6yE3oI5aS7dG9hJ2kL4nM8pB1cV6xZ3rT5yU7iO0qW2e"
-  }
-}
-```
-
-> This file **overrides** values from `appsettings.json` in Development environment. 
-> The JWT key above is an **example** - generate your own!
-
-### .env (Python Service - Create Locally - Gitignored)
-
-**Location:** `parser-AI-service/.env`
-
-```env
-# OpenAI API Configuration
-OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-OPENAI_MODEL=gpt-4o-mini
-
-# Optional: Custom timeout (default: 60s)
-# OPENAI_TIMEOUT=90
-```
-
-### .env.example
-
-**Location:** `parser-AI-service/.env.example`
-
-```env
-# OpenAI API Configuration
-# Get your API key from: https://platform.openai.com/api-keys
-OPENAI_API_KEY=sk-proj-your_api_key_here
-
-# Recommended models:
-# - gpt-4o-mini (fast, cheap, good for Polish)
-# - gpt-4o (most capable, slower, expensive)
-# - gpt-3.5-turbo (cheapest, worse Polish support)
-OPENAI_MODEL=gpt-4o-mini
 ```
 
 ---
