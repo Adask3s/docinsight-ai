@@ -6,7 +6,6 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.116-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react)](https://react.dev/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-412991?logo=openai)](https://openai.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
@@ -245,7 +244,7 @@ dotnet ef database list
 **Troubleshooting migrations:**
 ```bash
 # If migrations fail, check connection:
-dotnet ef database drop     # ⚠️ Deletes DB
+dotnet ef database drop     # Deletes DB ⚠️
 dotnet ef database update   # Recreate
 
 # View applied migrations:
@@ -263,10 +262,10 @@ dotnet run
 - Swagger UI: `https://localhost:5001/swagger`
 
 **First-time setup checklist:**
-- ✅ SQL Server LocalDB running
-- ✅ `appsettings.Development.json` created with real JWT key
-- ✅ Migrations applied (`dotnet ef database update`)
-- ✅ Python microservice running on port 8000
+- SQL Server LocalDB running ✅
+- `appsettings.Development.json` created with real JWT key ✅
+- Migrations applied (`dotnet ef database update`) ✅
+- Python microservice running on port 8000 ✅
 
 #### 3. AI Microservice Setup (Python)
 
@@ -307,7 +306,7 @@ OPENAI_MODEL=gpt-4o-mini
 - `gpt-4o` - More capable, 2-3x slower, higher cost
 - `gpt-3.5-turbo` - Cheapest, but worse Polish support
 
-**⚠️ Cost awareness:**
+**Cost awareness ⚠️:**
 - gpt-4o-mini: ~$0.15 per 1M input tokens, ~$0.60 per 1M output
 - First API call requires billing enabled in OpenAI account
 - Monitor usage: https://platform.openai.com/usage
@@ -321,7 +320,7 @@ The service uses `pl_core_news_sm` for Polish NLP (keyword extraction, tokenizat
 python -m spacy download pl_core_news_sm
 
 # Verify installation
-python -c "import spacy; nlp = spacy.load('pl_core_news_sm'); print('✅ spaCy model loaded')"
+python -c "import spacy; nlp = spacy.load('pl_core_news_sm'); print('spaCy model loaded ✅')"
 ```
 
 **If download fails:**
@@ -351,8 +350,8 @@ curl http://localhost:8000
 **Environment Variables Summary:**
 | Variable | Required | Default | Example |
 |----------|----------|---------|---------|
-| `OPENAI_API_KEY` | ✅ Yes | - | `sk-proj-...` |
-| `OPENAI_MODEL` | ✅ Yes | - | `gpt-4o-mini` |
+| `OPENAI_API_KEY` | Yes ✅ | - | `sk-proj-...` |
+| `OPENAI_MODEL` | Yes ✅ | - | `gpt-4o-mini` |
 
 #### 4. Frontend Setup (React)
 
@@ -407,11 +406,11 @@ curl -X POST http://localhost:8000/analyze/summary \
 - View analysis results
 
 **Success indicators:**
-- ✅ Backend Swagger UI loads
-- ✅ Python service returns `{"status":"ok"}`
-- ✅ Frontend loads without console errors
-- ✅ Can register/login
-- ✅ Can upload and analyze documents
+- Backend Swagger UI loads ✅
+- Python service returns `{"status":"ok"}` ✅
+- Frontend loads without console errors ✅
+- Can register/login ✅
+- Can upload and analyze documents ✅
 
 ---
 
@@ -490,7 +489,7 @@ DocInsightAI/
     "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=DocInsightDb;Trusted_Connection=True;MultipleActiveResultSets=true"
   },
   "Jwt": {
-    "Key": "ENTER_YOUR_32_CHARACTER_SECRET_KEY_HERE",  // ⚠️ Placeholder only
+    "Key": "ENTER_YOUR_32_CHARACTER_SECRET_KEY_HERE",  // Placeholder only ⚠️
     "Issuer": "DocInsight",
     "Audience": "DocInsightUsers",
     "ExpireHours": 12
@@ -674,20 +673,6 @@ This is a portfolio project, but feedback and suggestions are welcome!
 
 ---
 
-## License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Author
-
-**Your Name**
-- GitHub: [@Adask3s](https://github.com/Adask3s)
-- Email: your.email@example.com
-
----
-
 ## Troubleshooting
 
 ### Common Issues
@@ -779,7 +764,7 @@ pip install https://github.com/explosion/spacy-models/releases/download/pl_core_
 
 **Solution:**
 ```bash
-# Reset database (⚠️ deletes all data)
+# Reset database (deletes all data ⚠️)
 dotnet ef database drop --force
 dotnet ef database update
 
@@ -837,5 +822,13 @@ dotenv --version
 echo $ASPNETCORE_ENVIRONMENT   # Linux/Mac
 echo %ASPNETCORE_ENVIRONMENT%  # Windows
 ```
+
+---
+
+## Author
+
+**Your Name**
+- GitHub: [@Adask3s](https://github.com/Adask3s)
+- Email: adam.kopystecki@gmail.com
 
 ---
