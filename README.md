@@ -43,7 +43,7 @@
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 DocInsight AI follows a **microservices architecture** with clear separation of concerns:
 
@@ -79,7 +79,7 @@ DocInsight AI follows a **microservices architecture** with clear separation of 
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 | Technology | Version | Purpose |
@@ -110,19 +110,9 @@ DocInsight AI follows a **microservices architecture** with clear separation of 
 
 ---
 
-## 📸 Screenshots
+## Getting Started
 
-> *Add screenshots of your application here to showcase:*
-> - Dashboard with document list
-> - Analysis report with risk assessment
-> - Chat interface with document Q&A
-> - Authentication flow
-
----
-
-## 🚀 Getting Started
-
-### ⚡ Quick Start Checklist
+### Quick Start Checklist
 
 Before you begin, make sure you have:
 
@@ -191,7 +181,7 @@ The project uses **SQL Server LocalDB** by default. `appsettings.json` already c
 
 ##### 2.2. Configure JWT Secret Key
 
-⚠️ **IMPORTANT**: `appsettings.json` in the repository contains a **placeholder** JWT key for security reasons.
+**IMPORTANT**: `appsettings.json` in the repository contains a **placeholder** JWT key for security reasons.
 
 Create `appsettings.Development.json` (already gitignored) with your **real secret key**:
 
@@ -383,7 +373,7 @@ Frontend will be available at `http://localhost:5173`
 
 ---
 
-### 🎉 Verify Complete Setup
+### Verify Complete Setup
 
 Once all three services are running, test the full stack:
 
@@ -425,7 +415,7 @@ curl -X POST http://localhost:8000/analyze/summary \
 
 ---
 
-### 🔐 Security Notes for Production
+### Security Notes for Production
 
 **Never commit these files to Git:**
 - `appsettings.Development.json` (contains real JWT key)
@@ -442,7 +432,7 @@ curl -X POST http://localhost:8000/analyze/summary \
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 DocInsightAI/
@@ -483,7 +473,7 @@ DocInsightAI/
 
 ---
 
-## ⚙️ Configuration Files Reference
+## Configuration Files Reference
 
 ### appsettings.json (Backend - Already in Repo)
 
@@ -555,7 +545,7 @@ OPENAI_MODEL=gpt-4o-mini
 
 ---
 
-## 🔌 API Documentation
+## API Documentation
 
 ### .NET Backend Endpoints
 
@@ -606,7 +596,7 @@ Full interactive API documentation available at:
 
 ---
 
-## 🧪 Key Implementation Details
+## Key Implementation Details
 
 ### AI Integration Strategy
 
@@ -645,7 +635,7 @@ Documents
 
 ---
 
-## 🎨 Features in Detail
+## Features in Detail
 
 ### 1. Document Risk Assessment
 
@@ -678,19 +668,19 @@ Implements **retrieval-augmented generation (RAG)**:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 This is a portfolio project, but feedback and suggestions are welcome!
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 👤 Author
+## Author
 
 **Your Name**
 - GitHub: [@Adask3s](https://github.com/Adask3s)
@@ -698,7 +688,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
