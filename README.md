@@ -830,7 +830,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## Author
 
-**Your Name**
+**Adask3s**
 - GitHub: [@Adask3s](https://github.com/Adask3s)
 - Email: adam.kopystecki@gmail.com
 
