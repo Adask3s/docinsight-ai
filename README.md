@@ -138,7 +138,7 @@ Before you begin, make sure you have:
 
 #### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/DocInsightAI.git
+git clone https://github.com/Adask3s/DocInsightAI.git
 cd DocInsightAI
 ```
 
